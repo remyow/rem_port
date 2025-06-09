@@ -1,14 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => counterProvider,
-      child: MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -37,63 +30,32 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
 
-  ValueNotifier t = ValueNotifier<int>(0);
-
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final c = Provider.of<CounterProvider>(context);
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '${c.count}',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            Selector<CounterProvider, int>(
-              builder: (BuildContext context, value, Widget? child) {
-                return Text(
-                  '$value',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                );
-              }, selector: (_, model) => model.count,),
-            ValueListenableBuilder(
-                valueListenable: t,
-                builder: (ctx, v, child){
-                  return TweenAnimationBuilder(
-                    key: ValueKey('${ctx.hashCode}'),
-                      tween: Tween<double>(begin: 0.0, end: 1.0),
-                      duration: const Duration(milliseconds: 100),
-                      builder: (ctx, tween, child){
-                        return AnimatedScale(
-                            scale: tween, duration: const Duration(milliseconds: 1000),
-                            child: child,
-                        );
-                      },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        child!,
-                        Text('$v')
-                      ],
-                    ),
-                  );
-                },
-              child: Text('message'),
-            ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
 
-          ],
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          c.increment();
-          t.value = c.count;
-        },
+        onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
